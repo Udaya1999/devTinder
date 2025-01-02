@@ -14,6 +14,11 @@ app.patch("/user",(req,res)=>{
   res.send("Data updated successfully for patch !")
 });
 
+app.put("/user",(req,res)=>{
+  //logic to update into db 
+  res.send("Data updated successfully for put !")
+})
+
 app.delete("/user",(req,res)=>{
   //logic to delete into db
   res.send("Data deleted successfully for delete !")
