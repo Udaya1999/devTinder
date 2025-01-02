@@ -1,32 +1,10 @@
 const express = require("express");
 const colors = require("colors");
 const app = express();
-app.get("/user", (req, res) => {
+app.get("/user/:userId/:name", (req, res) => {
+  console.log(req.params);
+  
   res.send({ FirstName: "uday", lastName: "konka" });
-});
-app.post("/user",((req,res)=>{
-  //logic to save into db
-  res.send("Data saved successfully !")
-}));
-
-app.patch("/user",(req,res)=>{
-  //logic to update into db
-  res.send("Data updated successfully for patch !")
-});
-
-app.put("/user",(req,res)=>{
-  //logic to update into db 
-  res.send("Data updated successfully for put !")
-})
-
-app.delete("/user",(req,res)=>{
-  //logic to delete into db
-  res.send("Data deleted successfully for delete !")
-})
-
-app.use("/test", (req, res) => {
-  // res.setEncoding("utf8 "); // Use a valid encoding
-  res.send("Hello konka udaya bhaskar all the very best");
 });
 
 app.listen(3000, () => {
