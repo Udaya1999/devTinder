@@ -6,6 +6,10 @@ app.use("/test", (req, res) => {
   // res.setEncoding("utf8 "); // Use a valid encoding
   res.send("Hello konka udaya bhaskar all the very best");
 });
+app.use("/hello", (req, res) => {
+  // res.setEncoding("utf8 "); // Use a valid encoding
+  res.send("Hello hello hello");
+});
 
 app.listen(3000, () => {
   console.log(colors.rainbow("Dev-Server_started......!!"));
