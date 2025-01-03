@@ -1,14 +1,19 @@
 const express = require("express");
 const colors = require("colors");
 const app = express();
-app.get("/user/:userId/:name", (req, res) => {
-  console.log(req.params);
-  
-  res.send({ FirstName: "uday", lastName: "konka" });
+
+app.get("/user", (req, res, next) => {
+  console.log("Handler 1 !!");
+  //res.send("Hello from handler 1");
+  next();
+}, 
+(req, res) => {
+    console.log("Handler 2 !!");
+    res.send("Hello from handler 2");
 });
 
 app.listen(3000, () => {
-  console.log(colors.rainbow("Dev-Server_started......!!"));
+  console.log(colors.rainbow("Dev-Server started......!!"));
 });
 
 // git init
