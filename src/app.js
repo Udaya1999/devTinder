@@ -27,6 +27,19 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/feed",async (req,res)=>{
+  try{
+    const users = await User.find({});
+    res.send(users);
+
+  }catch(err){
+
+    res.status(400).send("something went wrong");
+
+  }
+
+});
+
 connectDB()
   .then(() => {
     console.log("db connected successfully ...!");
