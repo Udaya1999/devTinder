@@ -2,6 +2,29 @@ const express = require("express");
 const colors = require("colors");
 const connectDB = require("./config/dataBase");
 const app = express();
+const User = require("./models/user");
+
+app.post("/signup", async (req,res)=>{
+  const user =new User( {
+    firstName : "virat",
+    lastName : "kohli",
+    emailId: "virat@gmail.com",
+    password : "virat@123",
+  })
+// creating new instance of user model
+  //const user = new User(userObj);
+
+  try{
+    await user.save();
+    res.send("user created");
+    
+  }catch(err){
+    res.status(400).send("Error saving the user: "+ err.message);
+  }
+
+ 
+
+})
 
 connectDB().then(()=>{
   console.log("db connected successfully ...!");
