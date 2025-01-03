@@ -4,6 +4,11 @@ const app = express();
 
 const { adminAuth, userAuth } = require("./middlewares/auth");
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/admin", adminAuth);
 
 app.get("/admin/getAllData", (req, res) => {
@@ -13,6 +18,7 @@ app.get("/admin/getAllData", (req, res) => {
 app.get("/user", userAuth, (req, res) => {
   res.send("Hello User");
 });
+
 app.post("/user/login", (req, res) => {
   res.send("Login Success");
 });
@@ -20,6 +26,7 @@ app.post("/user/login", (req, res) => {
 app.listen(3000, () => {
   console.log(colors.rainbow("Dev-Server started......!!"));
 });
+
 
 // git init
 // >> git commit -m "second commit"
