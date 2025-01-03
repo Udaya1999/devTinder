@@ -2,31 +2,27 @@ const express = require("express");
 const colors = require("colors");
 const app = express();
 
-const { adminAuth, userAuth } = require("./middlewares/auth");
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-// Middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/admin", adminAuth);
-
-app.get("/admin/getAllData", (req, res) => {
-  res.send("Hello Admin");
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("something went wrong");
+  }
 });
 
-app.get("/user", userAuth, (req, res) => {
-  res.send("Hello User");
+app.get("/getAllUsers", (req, res) => {
+  // console.log("getAllUsers");
+  // res.status(200).send("get all users")
+  throw new Error("svnfjv");
+  // res.send("dbyddhidj")
 });
-
-app.post("/user/login", (req, res) => {
-  res.send("Login Success");
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("something went wrong");
+  }
 });
 
 app.listen(3000, () => {
   console.log(colors.rainbow("Dev-Server started......!!"));
 });
-
 
 // git init
 // >> git commit -m "second commit"
