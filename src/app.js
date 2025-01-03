@@ -2,14 +2,19 @@ const express = require("express");
 const colors = require("colors");
 const app = express();
 
-app.get("/user", (req, res, next) => {
-  console.log("Handler 1 !!");
-  //res.send("Hello from handler 1");
-  next();
-}, 
-(req, res) => {
-    console.log("Handler 2 !!");
-    res.send("Hello from handler 2");
+const { adminAuth, userAuth } = require("./middlewares/auth");
+
+app.use("/admin", adminAuth);
+
+app.get("/admin/getAllData", (req, res) => {
+  res.send("Hello Admin");
+});
+
+app.get("/user", userAuth, (req, res) => {
+  res.send("Hello User");
+});
+app.post("/user/login", (req, res) => {
+  res.send("Login Success");
 });
 
 app.listen(3000, () => {
