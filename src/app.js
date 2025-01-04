@@ -9,7 +9,6 @@ app.use(express.json());
 app.post("/signup", async (req, res) => {
   const user = new User(req.body);
 
-
   // const user =new User( {
   //   firstName : "ram",
   //   lastName : "kumar",
@@ -27,43 +26,37 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.get("/feed",async (req,res)=>{
-  try{
+app.get("/feed", async (req, res) => {
+  try {
     const users = await User.find({});
     res.send(users);
-
-  }catch(err){
-
+  } catch (err) {
     res.status(400).send("something went wrong");
-
   }
-
 });
 
-app.delete("/user",async(req,res)=>{
+app.delete("/user", async (req, res) => {
   const userId = req.body.userId;
-  try{
+  try {
     const user = await User.findByIdAndDelete(userId);
-    res.send("user deleted successfully !")
-
-  }catch (err){
+    res.send("user deleted successfully !");
+  } catch (err) {
     res.status(400).send("something went wrong");
   }
 });
 
-app.patch("/user",async(req,res)=>{
+app.patch("/user", async (req, res) => {
   const userId = req.body.userId;
   const data = req.body;
-  try{
-    const user = await User.findByIdAndUpdate({_id: userId}, data,{
-      runValidators: true
-    } );
+  try {
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      runValidators: true,
+    });
     console.log(user);
-    
-    res.send("updated successfully !")
 
-  }catch (err){
-    res.status(400).send("update failed: "+ err.message);
+    res.send("updated successfully !");
+  } catch (err) {
+    res.status(400).send("update failed: " + err.message);
   }
 });
 
@@ -77,5 +70,3 @@ connectDB()
   .catch((err) => {
     console.error("db is not connected");
   });
-
-
