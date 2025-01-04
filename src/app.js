@@ -8,6 +8,7 @@ const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const userAuth = require("./middlewares/auth");
 
 app.use(express.json()); // middleware for json data
 app.use(cookieParser()); // middleware for cookies (JWT - tokens...)
@@ -59,22 +60,12 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const cookies = req.cookies;
-    if (!cookies.token) {
-      throw new Error("invalid token");
-    }
-    //validate my token
-    const decodedMsg = await jwt.verify(cookies.token, "UDAY@Tinder$209");
-    const { _id } = decodedMsg;
-    const user = await User.findById(_id);
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = req.user;
     res.send(user);
   } catch (err) {
-    res.status(400).send("Error fetching profile: " + err.message);
+    res.status(400).send("Error: " + err.message);
   }
 });
 
