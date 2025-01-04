@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       // create a jwt token
-      const token = await jwt.sign({ _id: user._id }, "UDAY@Tinder$209");
+      const token = await jwt.sign({ _id: user._id }, "UDAY@Tinder$209",{expiresIn: "1d"});
 
       // Add the token to cookie and send the response back to the user
       res.cookie("token", token);
@@ -69,55 +69,10 @@ app.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-app.get("/feed", async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (err) {
-    res.status(400).send("something went wrong");
-  }
-});
-
-app.delete("/user", async (req, res) => {
-  const userId = req.body.userId;
-  try {
-    const user = await User.findByIdAndDelete(userId);
-    res.send("user deleted successfully !");
-  } catch (err) {
-    res.status(400).send("something went wrong");
-  }
-});
-
-app.patch("/user/:userId", async (req, res) => {
-  const userId = req.params?.userId;
-  console.log(userId);
-
-  const data = req.body;
-  console.log(data);
-
-  // validation on api level ....
-  try {
-    const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"];
-    const isUpdateAllowed = Object.keys(data).every((k) =>
-      ALLOWED_UPDATES.includes(k)
-    );
-    if (!isUpdateAllowed) {
-      throw new Error("update not allowed");
-    }
-    // validation for skills array..
-    if (data.skills.lenght > 10) {
-      throw new Error("skills can't be more than 10");
-    }
-
-    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
-      runValidators: true,
-    });
-    console.log(user);
-
-    res.send("updated successfully !");
-  } catch (err) {
-    res.status(400).send("update failed: " + err.message);
-  }
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+  const user = req.user;
+  console.log("sending a connection request");
+  res.send( user.firstName + " sent you a Connection Request");
 });
 
 connectDB()
