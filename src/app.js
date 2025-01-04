@@ -4,26 +4,50 @@ const connectDB = require("./config/dataBase");
 const app = express();
 const User = require("./models/user");
 const { Error } = require("mongoose");
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
-
-  // const user =new User( {
-  //   firstName : "ram",
-  //   lastName : "kumar",
-  //   emailId: "ram@gmail.com",
-  //   password : "ram@123",
-  // })
-  // creating new instance of user model
-  //const user = new User(userObj);
-
   try {
+    //validation of data
+    validateSignUpData(req);
+
+    //encript the password
+    const { password, firstName, lastName, emailId,age } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // new instance of the object
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+      age,
+    });
     await user.save();
     res.send("user created");
   } catch (err) {
     res.status(400).send("Error saving the user: " + err.message);
+  }
+});
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      throw new Error("Invalid credentials");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (isPasswordValid) {
+      res.send("User logged in");
+      console.log(user);
+    } else {
+      throw new Error("Invalid credentials");
+    }
+  } catch (err) {
+    res.status(400).send("Error logging in: " + err.message);
   }
 });
 
