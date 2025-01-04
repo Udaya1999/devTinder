@@ -3,6 +3,7 @@ const colors = require("colors");
 const connectDB = require("./config/dataBase");
 const app = express();
 const User = require("./models/user");
+const { Error } = require("mongoose");
 
 app.use(express.json());
 
@@ -45,10 +46,27 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
+  console.log(userId);
+
   const data = req.body;
+  console.log(data);
+
+  // validation on api level ....
   try {
+    const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"];
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+    if (!isUpdateAllowed) {
+      throw new Error("update not allowed");
+    }
+    // validation for skills array..
+    if (data.skills.lenght > 10) {
+      throw new Error("skills can't be more than 10");
+    }
+
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       runValidators: true,
     });
