@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
+
 const connectionRequestSchema = new mongoose.Schema(
   {
-    // your schema here
     fromUserId: {
       type: mongoose.Schema.ObjectId,
       required: true,
@@ -15,7 +15,7 @@ const connectionRequestSchema = new mongoose.Schema(
       required: true,
       enum: {
         values: ["interested", "accepted", "rejected", "ignore"],
-        message: `{value} is not a valid status `,
+        message: `{value} is not a valid status`,
       },
     },
   },
@@ -24,17 +24,18 @@ const connectionRequestSchema = new mongoose.Schema(
   }
 );
 
-connectionRequestSchema.pre("save", function () {
+connectionRequestSchema.pre("save", function (next) {
   const connectionRequest = this;
-  //check if from usi and to user id
+  // Check if fromUserId and toUserId are the same
   if (connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
-    throw new Error("You can't send connection request to yourself");
+    throw new Error("You can't send a connection request to yourself");
   }
   next();
 });
 
-const ConnectionRequestModel = new mongoose.model(
+const ConnectionRequestModel = mongoose.model(
   "ConnectionRequest",
   connectionRequestSchema
 );
+
 module.exports = ConnectionRequestModel;
