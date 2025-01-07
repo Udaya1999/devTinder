@@ -16,6 +16,11 @@ requesRouter.post(
       const allowedStatus = ["ignored", "interested"];
       if (!allowedStatus.includes(status)) {
         return res.status(400).json({ message: "Invalid status: " + status });
+      };
+
+      const toUser = await User.findById(toUserId);
+      if (!toUser) {
+        return res.status(404).json({ message: "User not found" });
       }
 
       // if there is an existing connectionRequest
